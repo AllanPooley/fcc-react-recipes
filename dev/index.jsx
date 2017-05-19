@@ -239,8 +239,15 @@ class RecipeBox extends React.Component {
     this.setState({ modalVisibility: true });
   }
 
-  editRecipe(recipeIndex, recipe) {
-    
+  editRecipe(recipeIndex, updatedRecipe) {
+    var newRecipesState = this.state.recipes.map( (recipe, index) => {
+        if(index !== recipeIndex) {
+          // This is not the element that needs updating, return as is
+          return recipe;
+        }
+        // Return the new element instead of the original.
+        return updatedRecipe;
+    });
   }
 
   deleteRecipe(index) {

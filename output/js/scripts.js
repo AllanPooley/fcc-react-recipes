@@ -18031,7 +18031,16 @@ var RecipeBox = function (_React$Component3) {
     }
   }, {
     key: "editRecipe",
-    value: function editRecipe(recipeIndex, recipe) {}
+    value: function editRecipe(recipeIndex, updatedRecipe) {
+      var newRecipesState = this.state.recipes.map(function (recipe, index) {
+        if (index !== recipeIndex) {
+          // This is not the element that needs updating, return as is
+          return recipe;
+        }
+        // Return the new element instead of the original.
+        return updatedRecipe;
+      });
+    }
   }, {
     key: "deleteRecipe",
     value: function deleteRecipe(index) {
