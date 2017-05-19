@@ -4,27 +4,26 @@
 //    | RecipeBox
 //      | Recipe
 //      | RecipeEditorModal
-//
+
 
 import React from "react";
 import ReactDOM from "react-dom";
-import ReactBootstrap from "react-bootstrap";
 
 // Importing React-Bootstrap Components
-var Well = ReactBootstrap.Well;
-var PanelGroup = ReactBootstrap.PanelGroup;
-var Panel = ReactBootstrap.Panel;
-var Accordion = ReactBootstrap.Accordion;
-var ListGroup = ReactBootstrap.ListGroup;
-var ListGroupItem = ReactBootstrap.ListGroupItem;
-var Button = ReactBootstrap.Button;
-var Modal = ReactBootstrap.Modal;
-var Form = ReactBootstrap.Form
-var FormGroup = ReactBootstrap.FormGroup;
-var Col = ReactBootstrap.Col;
-var FormControl = ReactBootstrap.FormControl;
-var ControlLabel = ReactBootstrap.ControlLabel;
-var Checkbox = ReactBootstrap.Checkbox;
+import { Well } from 'react-bootstrap';
+import { PanelGroup } from 'react-bootstrap';
+import { Panel } from 'react-bootstrap';
+import { Accordion } from 'react-bootstrap';
+import { ListGroup } from 'react-bootstrap';
+import { ListGroupItem } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
+import { FormGroup } from 'react-bootstrap';
+import { FormControl } from 'react-bootstrap';
+import { ControlLabel } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
+import { Checkbox } from 'react-bootstrap';
 
 
 class Recipe extends React.Component {

@@ -17707,8 +17707,6 @@ var _reactDom2 = _interopRequireDefault(_reactDom);
 
 var _reactBootstrap = __webpack_require__(201);
 
-var _reactBootstrap2 = _interopRequireDefault(_reactBootstrap);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -17721,23 +17719,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 //    | RecipeBox
 //      | Recipe
 //      | RecipeEditorModal
-//
+
 
 // Importing React-Bootstrap Components
-var Well = _reactBootstrap2.default.Well;
-var PanelGroup = _reactBootstrap2.default.PanelGroup;
-var Panel = _reactBootstrap2.default.Panel;
-var Accordion = _reactBootstrap2.default.Accordion;
-var ListGroup = _reactBootstrap2.default.ListGroup;
-var ListGroupItem = _reactBootstrap2.default.ListGroupItem;
-var Button = _reactBootstrap2.default.Button;
-var Modal = _reactBootstrap2.default.Modal;
-var Form = _reactBootstrap2.default.Form;
-var FormGroup = _reactBootstrap2.default.FormGroup;
-var Col = _reactBootstrap2.default.Col;
-var FormControl = _reactBootstrap2.default.FormControl;
-var ControlLabel = _reactBootstrap2.default.ControlLabel;
-var Checkbox = _reactBootstrap2.default.Checkbox;
+
 
 var Recipe = function (_React$Component) {
   _inherits(Recipe, _React$Component);
@@ -17756,7 +17741,7 @@ var Recipe = function (_React$Component) {
 
       // Giving the Ingredients list a heading.
       var ingredientsHeader = _react2.default.createElement(
-        ListGroupItem,
+        _reactBootstrap.ListGroupItem,
         { bsStyle: "info" },
         "Ingredients"
       );
@@ -17766,10 +17751,10 @@ var Recipe = function (_React$Component) {
       var ingredientsArr = this.props.recipe.ingredients.split(",");
       ingredientsArr.forEach(function (ingredient) {
         ingredients.push(_react2.default.createElement(
-          ListGroupItem,
+          _reactBootstrap.ListGroupItem,
           null,
           _react2.default.createElement(
-            Checkbox,
+            _reactBootstrap.Checkbox,
             null,
             ingredient
           )
@@ -17777,34 +17762,34 @@ var Recipe = function (_React$Component) {
       });
 
       return _react2.default.createElement(
-        Panel,
+        _reactBootstrap.Panel,
         { header: this.props.recipe.name, collapsible: true },
         _react2.default.createElement(
-          ListGroup,
+          _reactBootstrap.ListGroup,
           null,
           _react2.default.createElement(
-            ListGroup,
+            _reactBootstrap.ListGroup,
             null,
             ingredients
           ),
           _react2.default.createElement(
-            ListGroupItem,
+            _reactBootstrap.ListGroupItem,
             { bsStyle: "info" },
             "Instructions"
           ),
           _react2.default.createElement(
-            ListGroupItem,
+            _reactBootstrap.ListGroupItem,
             null,
             this.props.recipe.instructions
           )
         ),
         _react2.default.createElement(
-          Button,
+          _reactBootstrap.Button,
           { bsStyle: "danger", className: "button" },
           "Delete"
         ),
         _react2.default.createElement(
-          Button,
+          _reactBootstrap.Button,
           { bsStyle: "primary", className: "button" },
           "Edit"
         )
@@ -17828,7 +17813,7 @@ var RecipeEditorModal = function (_React$Component2) {
     key: "render",
     value: function render() {
       return _react2.default.createElement(
-        Modal,
+        _reactBootstrap.Modal,
         {
           show: this.props.visibility,
           onHide: this.props.hide,
@@ -17836,49 +17821,49 @@ var RecipeEditorModal = function (_React$Component2) {
           "aria-labelledby": "contained-modal-title"
         },
         _react2.default.createElement(
-          Modal.Header,
+          _reactBootstrap.Modal.Header,
           { closeButton: true },
           _react2.default.createElement(
-            Modal.Title,
+            _reactBootstrap.Modal.Title,
             null,
             "New Recipe"
           )
         ),
         _react2.default.createElement(
-          Modal.Body,
+          _reactBootstrap.Modal.Body,
           null,
           _react2.default.createElement(
             "form",
             null,
             _react2.default.createElement(
-              FormGroup,
+              _reactBootstrap.FormGroup,
               null,
               _react2.default.createElement(
-                ControlLabel,
+                _reactBootstrap.ControlLabel,
                 null,
                 "Recipe Name"
               ),
-              _react2.default.createElement(FormControl, {
+              _react2.default.createElement(_reactBootstrap.FormControl, {
                 type: "text",
                 placeholder: "Here, give your recipe a name.",
                 className: "modal-form-control"
               }),
               _react2.default.createElement(
-                ControlLabel,
+                _reactBootstrap.ControlLabel,
                 null,
                 "Ingredients"
               ),
-              _react2.default.createElement(FormControl, {
+              _react2.default.createElement(_reactBootstrap.FormControl, {
                 type: "text",
                 placeholder: "Here, list the ingredients, each separated by a comma.",
                 className: "modal-form-control"
               }),
               _react2.default.createElement(
-                ControlLabel,
+                _reactBootstrap.ControlLabel,
                 null,
                 "Directions"
               ),
-              _react2.default.createElement(FormControl, {
+              _react2.default.createElement(_reactBootstrap.FormControl, {
                 type: "text",
                 placeholder: "Here, write the steps required to cook this recipe.",
                 className: "modal-form-control"
@@ -17887,15 +17872,15 @@ var RecipeEditorModal = function (_React$Component2) {
           )
         ),
         _react2.default.createElement(
-          Modal.Footer,
+          _reactBootstrap.Modal.Footer,
           null,
           _react2.default.createElement(
-            Button,
+            _reactBootstrap.Button,
             { bsStyle: "success", onClick: this.props.hide },
             "Add"
           ),
           _react2.default.createElement(
-            Button,
+            _reactBootstrap.Button,
             { bsStyle: "danger", onClick: this.props.hide },
             "Cancel"
           )
@@ -17979,12 +17964,12 @@ var RecipeBox = function (_React$Component3) {
           addRecipe: this.addRecipe,
           hide: this.hideModal }),
         _react2.default.createElement(
-          Accordion,
+          _reactBootstrap.Accordion,
           null,
           recipes
         ),
         _react2.default.createElement(
-          Button,
+          _reactBootstrap.Button,
           {
             bsStyle: "primary",
             className: "button",
