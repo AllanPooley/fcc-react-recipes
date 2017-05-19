@@ -1,20 +1,3 @@
-$colorPrimary:#01445a; // Blue
-$colorPrimaryLight:#38b4c1; // Light blue, insides?
-$colorPrimaryDark:#0b303f; // Dark Blue, outlines?
-$colorAccent:#fdc23e; // Yellow, buttons?
-
-body {
-  @extend .text;
-  background: $colorPrimary;
-}
-
-.text {
-  font-family: 'Nunito', sans-serif;
-}
-
-.headings {
-  font-family: 'Sigmar One', cursive;
-}
 
 #container {
   margin: 10px;

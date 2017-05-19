@@ -1,3 +1,70 @@
 /* Globals - styling shared across the page, such as Typography */
+body {
+  background: #01445a; }
+
+.text, body {
+  font-family: 'Nunito', sans-serif; }
+
+.headings, .header {
+  font-family: 'Sigmar One', cursive; }
+
+#container {
+  margin: 10px;
+  margin-bottom: 100px; }
+
+.header {
+  color: #fdc23e;
+  text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 1px 1px black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black;
+  text-align: center;
+  width: 100%;
+  margin: 50px 0px; }
+
+.recipe-box-container {
+  width: 90%;
+  max-width: 900px;
+  margin: 0 auto; }
+
+.button {
+  float: right;
+  margin: 5px; }
+
+.modal-container {
+  position: relative; }
+
+.modal-container .modal, .modal-container .modal-backdrop {
+  position: absolute; }
+
+.modal-form-control {
+  margin-bottom: 20px; }
+
+/* Recipe Box - the contents of the page */
+#container {
+  margin: 10px;
+  margin-bottom: 100px; }
+
+.header {
+  color: #fdc23e;
+  text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 1px 1px black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black;
+  text-align: center;
+  width: 100%;
+  margin: 50px 0px; }
+
+.recipe-box-container {
+  width: 90%;
+  max-width: 900px;
+  margin: 0 auto; }
+
+.button {
+  float: right;
+  margin: 5px; }
+
+.modal-container {
+  position: relative; }
+
+.modal-container .modal, .modal-container .modal-backdrop {
+  position: absolute; }
+
+.modal-form-control {
+  margin-bottom: 20px; }
 
 /*# sourceMappingURL=main.css.map */
