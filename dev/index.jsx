@@ -72,9 +72,45 @@ class Recipe extends React.Component {
 class RecipeEditorModal extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      recipeNameInput: '',
+      recipeIngredientsInput: '',
+      recipeDirectionsInput: ''
+    };
+
+    this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleIngredientsChange = this.handleIngredientsChange.bind(this);
+    this.handleDirectionsChange = this.handleDirectionsChange.bind(this);
+    this.handleAddRecipe = this.handleAddRecipe.bind(this);
   }
 
+  handleNameChange(e) {
+    this.setState({
+      recipeNameInput: e.target.value
+    })
+  }
 
+  handleIngredientsChange(e) {
+    this.setState({
+      recipeIngredientsInput: e.target.value
+    })
+  }
+
+  handleDirectionsChange(e) {
+    this.setState({
+      recipeDirectionsInput: e.target.value
+    })
+  }
+
+  handleAddRecipe() {
+    var newRecipe = {
+        name: this.state.recipeNameInput,
+        ingredients: this.state.recipeIngredientsInput,
+        instructions: this.state.recipeDirectionsInput
+    };
+    this.props.addRecipe(newRecipe);
+    this.props.hide();
+  }
 
   render() {
     return (
@@ -94,25 +130,31 @@ class RecipeEditorModal extends React.Component {
               <FormControl
                 type="text"
                 placeholder="Here, give your recipe a name."
+                value={this.state.recipeNameInput}
+                onChange={this.handleNameChange}
                 className="modal-form-control"
                 />
               <ControlLabel>Ingredients</ControlLabel>
               <FormControl
                 type="text"
                 placeholder="Here, list the ingredients, each separated by a comma."
+                value={this.state.recipeIngredientsInput}
+                onChange={this.handleIngredientsChange}
                 className="modal-form-control"
                 />
               <ControlLabel>Directions</ControlLabel>
               <FormControl
                 type="text"
                 placeholder="Here, write the steps required to cook this recipe."
+                value={this.state.recipeDirectionsInput}
+                onChange={this.handleDirectionsChange}
                 className="modal-form-control"
                 />
             </FormGroup>
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <Button bsStyle="success" onClick={this.props.hide}>Add</Button>
+          <Button bsStyle="success" onClick={this.handleAddRecipe}>Add</Button>
           <Button bsStyle="danger" onClick={this.props.hide}>Cancel</Button>
         </Modal.Footer>
       </Modal>
@@ -196,7 +238,6 @@ class RecipeBox extends React.Component {
     );
   }
 }
-
 
 class App extends React.Component {
   constructor(props) {

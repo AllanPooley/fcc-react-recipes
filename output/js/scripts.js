@@ -17806,10 +17806,54 @@ var RecipeEditorModal = function (_React$Component2) {
   function RecipeEditorModal(props) {
     _classCallCheck(this, RecipeEditorModal);
 
-    return _possibleConstructorReturn(this, (RecipeEditorModal.__proto__ || Object.getPrototypeOf(RecipeEditorModal)).call(this, props));
+    var _this2 = _possibleConstructorReturn(this, (RecipeEditorModal.__proto__ || Object.getPrototypeOf(RecipeEditorModal)).call(this, props));
+
+    _this2.state = {
+      recipeNameInput: '',
+      recipeIngredientsInput: '',
+      recipeDirectionsInput: ''
+    };
+
+    _this2.handleNameChange = _this2.handleNameChange.bind(_this2);
+    _this2.handleIngredientsChange = _this2.handleIngredientsChange.bind(_this2);
+    _this2.handleDirectionsChange = _this2.handleDirectionsChange.bind(_this2);
+    _this2.handleAddRecipe = _this2.handleAddRecipe.bind(_this2);
+    return _this2;
   }
 
   _createClass(RecipeEditorModal, [{
+    key: "handleNameChange",
+    value: function handleNameChange(e) {
+      this.setState({
+        recipeNameInput: e.target.value
+      });
+    }
+  }, {
+    key: "handleIngredientsChange",
+    value: function handleIngredientsChange(e) {
+      this.setState({
+        recipeIngredientsInput: e.target.value
+      });
+    }
+  }, {
+    key: "handleDirectionsChange",
+    value: function handleDirectionsChange(e) {
+      this.setState({
+        recipeDirectionsInput: e.target.value
+      });
+    }
+  }, {
+    key: "handleAddRecipe",
+    value: function handleAddRecipe() {
+      var newRecipe = {
+        name: this.state.recipeNameInput,
+        ingredients: this.state.recipeIngredientsInput,
+        instructions: this.state.recipeDirectionsInput
+      };
+      this.props.addRecipe(newRecipe);
+      this.props.hide();
+    }
+  }, {
     key: "render",
     value: function render() {
       return _react2.default.createElement(
@@ -17846,6 +17890,8 @@ var RecipeEditorModal = function (_React$Component2) {
               _react2.default.createElement(_reactBootstrap.FormControl, {
                 type: "text",
                 placeholder: "Here, give your recipe a name.",
+                value: this.state.recipeNameInput,
+                onChange: this.handleNameChange,
                 className: "modal-form-control"
               }),
               _react2.default.createElement(
@@ -17856,6 +17902,8 @@ var RecipeEditorModal = function (_React$Component2) {
               _react2.default.createElement(_reactBootstrap.FormControl, {
                 type: "text",
                 placeholder: "Here, list the ingredients, each separated by a comma.",
+                value: this.state.recipeIngredientsInput,
+                onChange: this.handleIngredientsChange,
                 className: "modal-form-control"
               }),
               _react2.default.createElement(
@@ -17866,6 +17914,8 @@ var RecipeEditorModal = function (_React$Component2) {
               _react2.default.createElement(_reactBootstrap.FormControl, {
                 type: "text",
                 placeholder: "Here, write the steps required to cook this recipe.",
+                value: this.state.recipeDirectionsInput,
+                onChange: this.handleDirectionsChange,
                 className: "modal-form-control"
               })
             )
@@ -17876,7 +17926,7 @@ var RecipeEditorModal = function (_React$Component2) {
           null,
           _react2.default.createElement(
             _reactBootstrap.Button,
-            { bsStyle: "success", onClick: this.props.hide },
+            { bsStyle: "success", onClick: this.handleAddRecipe },
             "Add"
           ),
           _react2.default.createElement(
