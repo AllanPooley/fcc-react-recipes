@@ -29,6 +29,18 @@ import { Checkbox } from 'react-bootstrap';
 class Recipe extends React.Component {
   constructor(props) {
     super(props);
+
+    this.handleEdit = this.handleEdit.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+  }
+
+  handleEdit(e) {
+
+  }
+
+  handleDelete(e) {
+    console.log("Index as known by the recipe: " + this.props.index);
+    this.props.delete(this.props.index);
   }
 
   render() {
@@ -41,10 +53,10 @@ class Recipe extends React.Component {
 
     // Populating the Ingredients list with stored comma-separated ingredients.
     var ingredientsArr = this.props.recipe.ingredients.split(",");
-    ingredientsArr.forEach((ingredient) => {
+    ingredientsArr.forEach((ingredient, index) => {
       ingredients.push(
         <ListGroupItem>
-          <Checkbox>{ingredient}</Checkbox>
+          <Checkbox key={"ingredient-" + index}>{ingredient}</Checkbox>
         </ListGroupItem>
       );
     });
@@ -59,11 +71,11 @@ class Recipe extends React.Component {
             Instructions
           </ListGroupItem>
           <ListGroupItem>
-            {this.props.recipe.instructions}
+            {this.props.recipe.directions}
           </ListGroupItem>
         </ListGroup>
-        <Button bsStyle="danger" className='button'>Delete</Button>
-        <Button bsStyle="primary" className='button'>Edit</Button>
+        <Button bsStyle="danger" className='button' onClick={this.handleDelete}>Delete</Button>
+        <Button bsStyle="primary" className='button' onClick={this.handleEdit}>Edit</Button>
       </Panel>
     );
   }
@@ -78,10 +90,29 @@ class RecipeEditorModal extends React.Component {
       recipeDirectionsInput: ''
     };
 
+    this.clearInputs = this.clearInputs.bind(this);
+    this.fillInputs = this.fillInputs.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleIngredientsChange = this.handleIngredientsChange.bind(this);
     this.handleDirectionsChange = this.handleDirectionsChange.bind(this);
     this.handleAddRecipe = this.handleAddRecipe.bind(this);
+  }
+
+  clearInputs() {
+    this.setState({
+      recipeNameInput: '',
+      recipeIngredientsInput: '',
+      recipeDirectionsInput: ''
+    });
+  }
+
+
+  fillInputs(recipe) {
+    this.setState({
+      recipeNameInput: recipe.name,
+      recipeIngredientsInput: recipe.ingredients,
+      recipeDirectionsInput: recipe.directions
+    });
   }
 
   handleNameChange(e) {
@@ -106,13 +137,18 @@ class RecipeEditorModal extends React.Component {
     var newRecipe = {
         name: this.state.recipeNameInput,
         ingredients: this.state.recipeIngredientsInput,
-        instructions: this.state.recipeDirectionsInput
+        directions: this.state.recipeDirectionsInput
     };
     this.props.addRecipe(newRecipe);
     this.props.hide();
+    this.clearInputs();
   }
 
   render() {
+    var headerLabel = "New Recipe";
+    var submitButtonLabel = "Add";
+    // If editing - Change
+
     return (
       <Modal
         show={this.props.visibility}
@@ -121,7 +157,7 @@ class RecipeEditorModal extends React.Component {
         aria-labelledby="contained-modal-title"
         >
         <Modal.Header closeButton>
-          <Modal.Title>New Recipe</Modal.Title>
+          <Modal.Title>{headerLabel}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form>
@@ -154,7 +190,7 @@ class RecipeEditorModal extends React.Component {
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <Button bsStyle="success" onClick={this.handleAddRecipe}>Add</Button>
+          <Button bsStyle="success" onClick={this.handleAddRecipe}>{submitButtonLabel}</Button>
           <Button bsStyle="danger" onClick={this.props.hide}>Cancel</Button>
         </Modal.Footer>
       </Modal>
@@ -169,12 +205,12 @@ class RecipeBox extends React.Component {
       {
         name: "The Ultimate Base",
         ingredients: "Onion, garlic, mushrooms, oil",
-        instructions: "In a large pan, heat oil over medium heat and cook onion for 1-2 minutes. Add the onions and garlic and then cook for 1 minute."
+        directions: "In a large pan, heat oil over medium heat and cook onion for 1-2 minutes. Add the onions and garlic and then cook for 1 minute."
       },
       {
         name: "Coconut Curry Lentil Soup",
         ingredients: "Coconut oil, onion, garlic, ginger, tomato paste, curry powder, red pepper flakes, vegetable broth, coconut milk, diced tomatos, lentils, salt, pepper",
-        instructions: "In a stockpot, heat the coconut oil over medium heat and stir-fry the onion, garlic and ginger until the onion is translucent, a couple minutes. Add the tomato paste (or ketchup), curry powder, and red pepper flakes and cook for another minute. Add the vegetable broth, coconut milk, diced tomatoes and lentils. Cover and bring to a boil, then simmer on low heat for 20-30 minutes, until the lentils are very tender. Season with salt and pepper."
+        directions: "In a stockpot, heat the coconut oil over medium heat and stir-fry the onion, garlic and ginger until the onion is translucent, a couple minutes. Add the tomato paste (or ketchup), curry powder, and red pepper flakes and cook for another minute. Add the vegetable broth, coconut milk, diced tomatoes and lentils. Cover and bring to a boil, then simmer on low heat for 20-30 minutes, until the lentils are very tender. Season with salt and pepper."
       }
     ];
     this.state = {
@@ -183,23 +219,46 @@ class RecipeBox extends React.Component {
     }
 
     this.hideModal = this.hideModal.bind(this);
-    this.showModal = this.showModal.bind(this);
-    this.addRecipe = this.addRecipe.bind(this);
+    this.showModalAdd = this.showModalAdd.bind(this);
+    this.showModalEdit = this.showModalEdit.bind(this);
+    this.editRecipe = this.editRecipe.bind(this);
+    this.deleteRecipe = this.deleteRecipe.bind(this);
   }
 
   hideModal() {
     this.setState({ modalVisibility: false });
   }
 
-  showModal() {
+  showModalAdd(){
+
     this.setState({ modalVisibility: true });
+  }
+
+  showModalEdit(){
+
+    this.setState({ modalVisibility: true });
+  }
+
+  editRecipe(recipeIndex, recipe) {
+    
+  }
+
+  deleteRecipe(index) {
+    // Creating a new array with the specified element removed.
+    var newRecipesState = [
+      ...this.state.recipes.slice(0, index),
+      ...this.state.recipes.slice(index + 1)];
+
+    this.setState({
+      recipes: newRecipesState
+    });
   }
 
   addRecipe(recipe) {
     // React states are immutable.
     // To add a recipe, a new state with the new recipe appended must be created.
-    var newRecipesState = this.state.recipes.slice()
-    newRecipesState.push(recipe)
+    var newRecipesState = this.state.recipes.slice();
+    newRecipesState.push(recipe);
 
     this.setState({
       recipes: newRecipesState
@@ -210,12 +269,17 @@ class RecipeBox extends React.Component {
   render() {
 
     var recipesArr = this.state.recipes;
-
+    console.log("Rerendered!");
     console.log(recipesArr);
 
     var recipes = [];
     recipesArr.forEach((recipe, index) => {
-      recipes.push(<Recipe recipe={recipe}/>)
+      recipes.push(<Recipe
+        recipe={recipe}
+        index={index}
+        key={recipe.name}
+        edit={this.editRecipe}
+        delete={this.deleteRecipe}/>);
     })
 
     return (

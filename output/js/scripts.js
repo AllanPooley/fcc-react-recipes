@@ -17709,6 +17709,8 @@ var _reactBootstrap = __webpack_require__(201);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -17730,10 +17732,23 @@ var Recipe = function (_React$Component) {
   function Recipe(props) {
     _classCallCheck(this, Recipe);
 
-    return _possibleConstructorReturn(this, (Recipe.__proto__ || Object.getPrototypeOf(Recipe)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (Recipe.__proto__ || Object.getPrototypeOf(Recipe)).call(this, props));
+
+    _this.handleEdit = _this.handleEdit.bind(_this);
+    _this.handleDelete = _this.handleDelete.bind(_this);
+    return _this;
   }
 
   _createClass(Recipe, [{
+    key: "handleEdit",
+    value: function handleEdit(e) {}
+  }, {
+    key: "handleDelete",
+    value: function handleDelete(e) {
+      console.log("Index as known by the recipe: " + this.props.index);
+      this.props.delete(this.props.index);
+    }
+  }, {
     key: "render",
     value: function render() {
       // Recipe = an object containing: name, ingredients (comma separated), directions.
@@ -17749,13 +17764,13 @@ var Recipe = function (_React$Component) {
 
       // Populating the Ingredients list with stored comma-separated ingredients.
       var ingredientsArr = this.props.recipe.ingredients.split(",");
-      ingredientsArr.forEach(function (ingredient) {
+      ingredientsArr.forEach(function (ingredient, index) {
         ingredients.push(_react2.default.createElement(
           _reactBootstrap.ListGroupItem,
           null,
           _react2.default.createElement(
             _reactBootstrap.Checkbox,
-            null,
+            { key: "ingredient-" + index },
             ingredient
           )
         ));
@@ -17780,17 +17795,17 @@ var Recipe = function (_React$Component) {
           _react2.default.createElement(
             _reactBootstrap.ListGroupItem,
             null,
-            this.props.recipe.instructions
+            this.props.recipe.directions
           )
         ),
         _react2.default.createElement(
           _reactBootstrap.Button,
-          { bsStyle: "danger", className: "button" },
+          { bsStyle: "danger", className: "button", onClick: this.handleDelete },
           "Delete"
         ),
         _react2.default.createElement(
           _reactBootstrap.Button,
-          { bsStyle: "primary", className: "button" },
+          { bsStyle: "primary", className: "button", onClick: this.handleEdit },
           "Edit"
         )
       );
@@ -17814,6 +17829,8 @@ var RecipeEditorModal = function (_React$Component2) {
       recipeDirectionsInput: ''
     };
 
+    _this2.clearInputs = _this2.clearInputs.bind(_this2);
+    _this2.fillInputs = _this2.fillInputs.bind(_this2);
     _this2.handleNameChange = _this2.handleNameChange.bind(_this2);
     _this2.handleIngredientsChange = _this2.handleIngredientsChange.bind(_this2);
     _this2.handleDirectionsChange = _this2.handleDirectionsChange.bind(_this2);
@@ -17822,6 +17839,24 @@ var RecipeEditorModal = function (_React$Component2) {
   }
 
   _createClass(RecipeEditorModal, [{
+    key: "clearInputs",
+    value: function clearInputs() {
+      this.setState({
+        recipeNameInput: '',
+        recipeIngredientsInput: '',
+        recipeDirectionsInput: ''
+      });
+    }
+  }, {
+    key: "fillInputs",
+    value: function fillInputs(recipe) {
+      this.setState({
+        recipeNameInput: recipe.name,
+        recipeIngredientsInput: recipe.ingredients,
+        recipeDirectionsInput: recipe.directions
+      });
+    }
+  }, {
     key: "handleNameChange",
     value: function handleNameChange(e) {
       this.setState({
@@ -17848,14 +17883,19 @@ var RecipeEditorModal = function (_React$Component2) {
       var newRecipe = {
         name: this.state.recipeNameInput,
         ingredients: this.state.recipeIngredientsInput,
-        instructions: this.state.recipeDirectionsInput
+        directions: this.state.recipeDirectionsInput
       };
       this.props.addRecipe(newRecipe);
       this.props.hide();
+      this.clearInputs();
     }
   }, {
     key: "render",
     value: function render() {
+      var headerLabel = "New Recipe";
+      var submitButtonLabel = "Add";
+      // If editing - Change
+
       return _react2.default.createElement(
         _reactBootstrap.Modal,
         {
@@ -17870,7 +17910,7 @@ var RecipeEditorModal = function (_React$Component2) {
           _react2.default.createElement(
             _reactBootstrap.Modal.Title,
             null,
-            "New Recipe"
+            headerLabel
           )
         ),
         _react2.default.createElement(
@@ -17927,7 +17967,7 @@ var RecipeEditorModal = function (_React$Component2) {
           _react2.default.createElement(
             _reactBootstrap.Button,
             { bsStyle: "success", onClick: this.handleAddRecipe },
-            "Add"
+            submitButtonLabel
           ),
           _react2.default.createElement(
             _reactBootstrap.Button,
@@ -17953,11 +17993,11 @@ var RecipeBox = function (_React$Component3) {
     var starterRecipes = [{
       name: "The Ultimate Base",
       ingredients: "Onion, garlic, mushrooms, oil",
-      instructions: "In a large pan, heat oil over medium heat and cook onion for 1-2 minutes. Add the onions and garlic and then cook for 1 minute."
+      directions: "In a large pan, heat oil over medium heat and cook onion for 1-2 minutes. Add the onions and garlic and then cook for 1 minute."
     }, {
       name: "Coconut Curry Lentil Soup",
       ingredients: "Coconut oil, onion, garlic, ginger, tomato paste, curry powder, red pepper flakes, vegetable broth, coconut milk, diced tomatos, lentils, salt, pepper",
-      instructions: "In a stockpot, heat the coconut oil over medium heat and stir-fry the onion, garlic and ginger until the onion is translucent, a couple minutes. Add the tomato paste (or ketchup), curry powder, and red pepper flakes and cook for another minute. Add the vegetable broth, coconut milk, diced tomatoes and lentils. Cover and bring to a boil, then simmer on low heat for 20-30 minutes, until the lentils are very tender. Season with salt and pepper."
+      directions: "In a stockpot, heat the coconut oil over medium heat and stir-fry the onion, garlic and ginger until the onion is translucent, a couple minutes. Add the tomato paste (or ketchup), curry powder, and red pepper flakes and cook for another minute. Add the vegetable broth, coconut milk, diced tomatoes and lentils. Cover and bring to a boil, then simmer on low heat for 20-30 minutes, until the lentils are very tender. Season with salt and pepper."
     }];
     _this3.state = {
       recipes: starterRecipes,
@@ -17965,8 +18005,10 @@ var RecipeBox = function (_React$Component3) {
     };
 
     _this3.hideModal = _this3.hideModal.bind(_this3);
-    _this3.showModal = _this3.showModal.bind(_this3);
-    _this3.addRecipe = _this3.addRecipe.bind(_this3);
+    _this3.showModalAdd = _this3.showModalAdd.bind(_this3);
+    _this3.showModalEdit = _this3.showModalEdit.bind(_this3);
+    _this3.editRecipe = _this3.editRecipe.bind(_this3);
+    _this3.deleteRecipe = _this3.deleteRecipe.bind(_this3);
     return _this3;
   }
 
@@ -17976,9 +18018,29 @@ var RecipeBox = function (_React$Component3) {
       this.setState({ modalVisibility: false });
     }
   }, {
-    key: "showModal",
-    value: function showModal() {
+    key: "showModalAdd",
+    value: function showModalAdd() {
+
       this.setState({ modalVisibility: true });
+    }
+  }, {
+    key: "showModalEdit",
+    value: function showModalEdit() {
+
+      this.setState({ modalVisibility: true });
+    }
+  }, {
+    key: "editRecipe",
+    value: function editRecipe(recipeIndex, recipe) {}
+  }, {
+    key: "deleteRecipe",
+    value: function deleteRecipe(index) {
+      // Creating a new array with the specified element removed.
+      var newRecipesState = [].concat(_toConsumableArray(this.state.recipes.slice(0, index)), _toConsumableArray(this.state.recipes.slice(index + 1)));
+
+      this.setState({
+        recipes: newRecipesState
+      });
     }
   }, {
     key: "addRecipe",
@@ -17995,14 +18057,20 @@ var RecipeBox = function (_React$Component3) {
   }, {
     key: "render",
     value: function render() {
+      var _this4 = this;
 
       var recipesArr = this.state.recipes;
-
+      console.log("Rerendered!");
       console.log(recipesArr);
 
       var recipes = [];
       recipesArr.forEach(function (recipe, index) {
-        recipes.push(_react2.default.createElement(Recipe, { recipe: recipe }));
+        recipes.push(_react2.default.createElement(Recipe, {
+          recipe: recipe,
+          index: index,
+          key: recipe.name,
+          edit: _this4.editRecipe,
+          "delete": _this4.deleteRecipe }));
       });
 
       return _react2.default.createElement(
