@@ -1,0 +1,55 @@
+$colorPrimary:#01445a; // Blue
+$colorPrimaryLight:#38b4c1; // Light blue, insides?
+$colorPrimaryDark:#0b303f; // Dark Blue, outlines?
+$colorAccent:#fdc23e; // Yellow, buttons?
+
+body {
+  @extend .text;
+  background: $colorPrimary;
+}
+
+.text {
+  font-family: 'Nunito', sans-serif;
+}
+
+.headings {
+  font-family: 'Sigmar One', cursive;
+}
+
+#container {
+  margin: 10px;
+  margin-bottom: 100px;
+}
+
+.header {
+  @extend .headings;
+
+  color: $colorAccent;
+  text-shadow: 2px 0 0 black, -2px 0 0 black, 0 2px 0 black, 0 -2px 0 black, 1px 1px black, -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black;
+
+  text-align: center;
+  width: 100%;
+  margin: 50px 0px;
+}
+
+.recipe-box-container {
+  width: 90%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.button {
+  float: right;
+  margin: 5px;
+}
+
+.modal-container {
+  position: relative;
+}
+.modal-container .modal, .modal-container .modal-backdrop {
+  position: absolute;
+}
+
+.modal-form-control {
+  margin-bottom: 20px;
+}

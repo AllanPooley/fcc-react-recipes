@@ -6,6 +6,10 @@
 //      | RecipeEditorModal
 //
 
+import React from "react";
+import ReactDOM from "react-dom";
+import ReactBootstrap from "react-bootstrap";
+
 // Importing React-Bootstrap Components
 var Well = ReactBootstrap.Well;
 var PanelGroup = ReactBootstrap.PanelGroup;
