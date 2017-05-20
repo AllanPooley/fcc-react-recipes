@@ -17741,12 +17741,13 @@ var Recipe = function (_React$Component) {
 
   _createClass(Recipe, [{
     key: "handleEdit",
-    value: function handleEdit(e) {}
+    value: function handleEdit(e) {
+      this.props.showRecipeEditor(this.props.index);
+    }
   }, {
     key: "handleDelete",
     value: function handleDelete(e) {
-      console.log("Index as known by the recipe: " + this.props.index);
-      this.props.delete(this.props.index);
+      this.props.deleteRecipe(this.props.index);
     }
   }, {
     key: "render",
@@ -17767,10 +17768,10 @@ var Recipe = function (_React$Component) {
       ingredientsArr.forEach(function (ingredient, index) {
         ingredients.push(_react2.default.createElement(
           _reactBootstrap.ListGroupItem,
-          null,
+          { key: ingredient },
           _react2.default.createElement(
             _reactBootstrap.Checkbox,
-            { key: "ingredient-" + index },
+            { key: index },
             ingredient
           )
         ));
@@ -17778,7 +17779,9 @@ var Recipe = function (_React$Component) {
 
       return _react2.default.createElement(
         _reactBootstrap.Panel,
-        { header: this.props.recipe.name, collapsible: true },
+        { header: this.props.recipe.name,
+          key: this.props.recipe.name,
+          collapsible: true },
         _react2.default.createElement(
           _reactBootstrap.ListGroup,
           null,
@@ -17829,34 +17832,14 @@ var RecipeEditorModal = function (_React$Component2) {
       recipeDirectionsInput: ''
     };
 
-    _this2.clearInputs = _this2.clearInputs.bind(_this2);
-    _this2.fillInputs = _this2.fillInputs.bind(_this2);
     _this2.handleNameChange = _this2.handleNameChange.bind(_this2);
     _this2.handleIngredientsChange = _this2.handleIngredientsChange.bind(_this2);
     _this2.handleDirectionsChange = _this2.handleDirectionsChange.bind(_this2);
-    _this2.handleAddRecipe = _this2.handleAddRecipe.bind(_this2);
+    _this2.handleFormSubmit = _this2.handleFormSubmit.bind(_this2);
     return _this2;
   }
 
   _createClass(RecipeEditorModal, [{
-    key: "clearInputs",
-    value: function clearInputs() {
-      this.setState({
-        recipeNameInput: '',
-        recipeIngredientsInput: '',
-        recipeDirectionsInput: ''
-      });
-    }
-  }, {
-    key: "fillInputs",
-    value: function fillInputs(recipe) {
-      this.setState({
-        recipeNameInput: recipe.name,
-        recipeIngredientsInput: recipe.ingredients,
-        recipeDirectionsInput: recipe.directions
-      });
-    }
-  }, {
     key: "handleNameChange",
     value: function handleNameChange(e) {
       this.setState({
@@ -17878,23 +17861,43 @@ var RecipeEditorModal = function (_React$Component2) {
       });
     }
   }, {
-    key: "handleAddRecipe",
-    value: function handleAddRecipe() {
+    key: "handleFormSubmit",
+    value: function handleFormSubmit() {
+
       var newRecipe = {
         name: this.state.recipeNameInput,
         ingredients: this.state.recipeIngredientsInput,
         directions: this.state.recipeDirectionsInput
       };
-      this.props.addRecipe(newRecipe);
+
+      if (this.props.modalEditMode) {
+        this.props.editRecipe(this.props.modalRecipeIndex, newRecipe);
+      } else {
+        this.props.addRecipe(newRecipe);
+      }
+
       this.props.hide();
-      this.clearInputs();
+    }
+  }, {
+    key: "componentWillUpdate",
+    value: function componentWillUpdate() {
+      if (this.props.modalEditMode) {
+        this.setState({
+          recipeNameInput: this.props.recipes[this.props.modalRecipeIndex].name,
+          recipeIngredientsInput: this.props.recipes[this.props.modalRecipeIndex].ingredients,
+          recipeDirectionsInput: this.props.recipes[this.props.modalRecipeIndex].directions
+        });
+      } else {
+        this.setState({
+          recipeNameInput: '',
+          recipeIngredientsInput: '',
+          recipeDirectionsInput: ''
+        });
+      }
     }
   }, {
     key: "render",
     value: function render() {
-      var headerLabel = "New Recipe";
-      var submitButtonLabel = "Add";
-      // If editing - Change
 
       return _react2.default.createElement(
         _reactBootstrap.Modal,
@@ -17910,7 +17913,7 @@ var RecipeEditorModal = function (_React$Component2) {
           _react2.default.createElement(
             _reactBootstrap.Modal.Title,
             null,
-            headerLabel
+            this.props.modalEditMode ? 'Edit Recipe' : 'New Recipe'
           )
         ),
         _react2.default.createElement(
@@ -17966,8 +17969,8 @@ var RecipeEditorModal = function (_React$Component2) {
           null,
           _react2.default.createElement(
             _reactBootstrap.Button,
-            { bsStyle: "success", onClick: this.handleAddRecipe },
-            submitButtonLabel
+            { bsStyle: "success", onClick: this.handleFormSubmit },
+            this.props.modalEditMode ? 'Save' : 'Add'
           ),
           _react2.default.createElement(
             _reactBootstrap.Button,
@@ -18001,6 +18004,8 @@ var RecipeBox = function (_React$Component3) {
     }];
     _this3.state = {
       recipes: starterRecipes,
+      modalRecipe: {},
+      modalEditMode: false,
       modalVisibility: false
     };
 
@@ -18008,6 +18013,7 @@ var RecipeBox = function (_React$Component3) {
     _this3.showModalAdd = _this3.showModalAdd.bind(_this3);
     _this3.showModalEdit = _this3.showModalEdit.bind(_this3);
     _this3.editRecipe = _this3.editRecipe.bind(_this3);
+    _this3.addRecipe = _this3.addRecipe.bind(_this3);
     _this3.deleteRecipe = _this3.deleteRecipe.bind(_this3);
     return _this3;
   }
@@ -18020,14 +18026,23 @@ var RecipeBox = function (_React$Component3) {
   }, {
     key: "showModalAdd",
     value: function showModalAdd() {
-
-      this.setState({ modalVisibility: true });
+      this.setState({
+        modalRecipeIndex: -1,
+        modalEditMode: false,
+        modalVisibility: true
+      });
     }
   }, {
     key: "showModalEdit",
-    value: function showModalEdit() {
-
-      this.setState({ modalVisibility: true });
+    value: function showModalEdit(index) {
+      console.log("edit mode triggered");
+      this.setState({
+        modalRecipeIndex: index,
+        modalEditMode: true
+      });
+      this.setState({
+        modalVisibility: true
+      });
     }
   }, {
     key: "editRecipe",
@@ -18039,6 +18054,10 @@ var RecipeBox = function (_React$Component3) {
         }
         // Return the new element instead of the original.
         return updatedRecipe;
+      });
+
+      this.setState({
+        recipes: newRecipesState
       });
     }
   }, {
@@ -18078,8 +18097,8 @@ var RecipeBox = function (_React$Component3) {
           recipe: recipe,
           index: index,
           key: recipe.name,
-          edit: _this4.editRecipe,
-          "delete": _this4.deleteRecipe }));
+          showRecipeEditor: _this4.showModalEdit,
+          deleteRecipe: _this4.deleteRecipe }));
       });
 
       return _react2.default.createElement(
@@ -18088,7 +18107,10 @@ var RecipeBox = function (_React$Component3) {
         _react2.default.createElement(RecipeEditorModal, {
           visibility: this.state.modalVisibility,
           recipes: this.state.recipes,
+          modalRecipeIndex: this.state.modalRecipeIndex,
+          modalEditMode: this.state.modalEditMode,
           addRecipe: this.addRecipe,
+          editRecipe: this.editRecipe,
           hide: this.hideModal }),
         _react2.default.createElement(
           _reactBootstrap.Accordion,
@@ -18100,7 +18122,7 @@ var RecipeBox = function (_React$Component3) {
           {
             bsStyle: "primary",
             className: "button",
-            onClick: this.showModal },
+            onClick: this.showModalAdd },
           "Add Recipe"
         )
       );

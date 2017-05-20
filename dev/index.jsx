@@ -35,12 +35,11 @@ class Recipe extends React.Component {
   }
 
   handleEdit(e) {
-
+    this.props.showRecipeEditor(this.props.index);
   }
 
   handleDelete(e) {
-    console.log("Index as known by the recipe: " + this.props.index);
-    this.props.delete(this.props.index);
+    this.props.deleteRecipe(this.props.index);
   }
 
   render() {
@@ -55,14 +54,16 @@ class Recipe extends React.Component {
     var ingredientsArr = this.props.recipe.ingredients.split(",");
     ingredientsArr.forEach((ingredient, index) => {
       ingredients.push(
-        <ListGroupItem>
-          <Checkbox key={"ingredient-" + index}>{ingredient}</Checkbox>
+        <ListGroupItem key={ingredient}>
+          <Checkbox key={index}>{ingredient}</Checkbox>
         </ListGroupItem>
       );
     });
 
     return (
-      <Panel header={this.props.recipe.name} collapsible>
+      <Panel header={this.props.recipe.name}
+        key={this.props.recipe.name}
+        collapsible>
         <ListGroup>
           <ListGroup>
             {ingredients}
@@ -90,29 +91,10 @@ class RecipeEditorModal extends React.Component {
       recipeDirectionsInput: ''
     };
 
-    this.clearInputs = this.clearInputs.bind(this);
-    this.fillInputs = this.fillInputs.bind(this);
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleIngredientsChange = this.handleIngredientsChange.bind(this);
     this.handleDirectionsChange = this.handleDirectionsChange.bind(this);
-    this.handleAddRecipe = this.handleAddRecipe.bind(this);
-  }
-
-  clearInputs() {
-    this.setState({
-      recipeNameInput: '',
-      recipeIngredientsInput: '',
-      recipeDirectionsInput: ''
-    });
-  }
-
-
-  fillInputs(recipe) {
-    this.setState({
-      recipeNameInput: recipe.name,
-      recipeIngredientsInput: recipe.ingredients,
-      recipeDirectionsInput: recipe.directions
-    });
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
   handleNameChange(e) {
@@ -133,21 +115,40 @@ class RecipeEditorModal extends React.Component {
     })
   }
 
-  handleAddRecipe() {
+  handleFormSubmit() {
+
     var newRecipe = {
         name: this.state.recipeNameInput,
         ingredients: this.state.recipeIngredientsInput,
         directions: this.state.recipeDirectionsInput
     };
-    this.props.addRecipe(newRecipe);
+
+    if (this.props.modalEditMode) {
+      this.props.editRecipe(this.props.modalRecipeIndex, newRecipe);
+    } else {
+      this.props.addRecipe(newRecipe);
+    }
+
     this.props.hide();
-    this.clearInputs();
+  }
+
+  componentWillUpdate() {
+    if (this.props.modalEditMode) {
+      this.setState({
+        recipeNameInput: this.props.recipes[this.props.modalRecipeIndex].name,
+        recipeIngredientsInput: this.props.recipes[this.props.modalRecipeIndex].ingredients,
+        recipeDirectionsInput: this.props.recipes[this.props.modalRecipeIndex].directions
+      });
+    } else {
+      this.setState({
+        recipeNameInput: '',
+        recipeIngredientsInput: '',
+        recipeDirectionsInput: ''
+      })
+    }
   }
 
   render() {
-    var headerLabel = "New Recipe";
-    var submitButtonLabel = "Add";
-    // If editing - Change
 
     return (
       <Modal
@@ -157,7 +158,7 @@ class RecipeEditorModal extends React.Component {
         aria-labelledby="contained-modal-title"
         >
         <Modal.Header closeButton>
-          <Modal.Title>{headerLabel}</Modal.Title>
+          <Modal.Title>{this.props.modalEditMode ? 'Edit Recipe' : 'New Recipe'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form>
@@ -190,7 +191,7 @@ class RecipeEditorModal extends React.Component {
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <Button bsStyle="success" onClick={this.handleAddRecipe}>{submitButtonLabel}</Button>
+          <Button bsStyle="success" onClick={this.handleFormSubmit}>{this.props.modalEditMode ? 'Save' : 'Add'}</Button>
           <Button bsStyle="danger" onClick={this.props.hide}>Cancel</Button>
         </Modal.Footer>
       </Modal>
@@ -215,6 +216,8 @@ class RecipeBox extends React.Component {
     ];
     this.state = {
       recipes: starterRecipes,
+      modalRecipe: {},
+      modalEditMode: false,
       modalVisibility: false
     }
 
@@ -222,6 +225,7 @@ class RecipeBox extends React.Component {
     this.showModalAdd = this.showModalAdd.bind(this);
     this.showModalEdit = this.showModalEdit.bind(this);
     this.editRecipe = this.editRecipe.bind(this);
+    this.addRecipe = this.addRecipe.bind(this);
     this.deleteRecipe = this.deleteRecipe.bind(this);
   }
 
@@ -230,13 +234,22 @@ class RecipeBox extends React.Component {
   }
 
   showModalAdd(){
-
-    this.setState({ modalVisibility: true });
+    this.setState({
+      modalRecipeIndex: -1,
+      modalEditMode: false,
+      modalVisibility: true
+    });
   }
 
-  showModalEdit(){
-
-    this.setState({ modalVisibility: true });
+  showModalEdit(index){
+    console.log("edit mode triggered");
+    this.setState({
+      modalRecipeIndex: index,
+      modalEditMode: true
+    });
+    this.setState({
+      modalVisibility: true
+    });
   }
 
   editRecipe(recipeIndex, updatedRecipe) {
@@ -247,6 +260,10 @@ class RecipeBox extends React.Component {
         }
         // Return the new element instead of the original.
         return updatedRecipe;
+    });
+
+    this.setState({
+      recipes: newRecipesState
     });
   }
 
@@ -274,7 +291,6 @@ class RecipeBox extends React.Component {
 
 
   render() {
-
     var recipesArr = this.state.recipes;
     console.log("Rerendered!");
     console.log(recipesArr);
@@ -285,8 +301,8 @@ class RecipeBox extends React.Component {
         recipe={recipe}
         index={index}
         key={recipe.name}
-        edit={this.editRecipe}
-        delete={this.deleteRecipe}/>);
+        showRecipeEditor={this.showModalEdit}
+        deleteRecipe={this.deleteRecipe}/>);
     })
 
     return (
@@ -294,7 +310,10 @@ class RecipeBox extends React.Component {
         <RecipeEditorModal
           visibility={this.state.modalVisibility}
           recipes={this.state.recipes}
+          modalRecipeIndex = {this.state.modalRecipeIndex}
+          modalEditMode={this.state.modalEditMode}
           addRecipe={this.addRecipe}
+          editRecipe={this.editRecipe}
           hide={this.hideModal}/>
         <Accordion>
           {recipes}
@@ -302,7 +321,7 @@ class RecipeBox extends React.Component {
         <Button
           bsStyle="primary"
           className='button'
-          onClick={this.showModal}>
+          onClick={this.showModalAdd}>
           Add Recipe
         </Button>
       </div>
