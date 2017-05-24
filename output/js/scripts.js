@@ -17879,23 +17879,6 @@ var RecipeEditorModal = function (_React$Component2) {
       this.props.hide();
     }
   }, {
-    key: "componentWillUpdate",
-    value: function componentWillUpdate() {
-      if (this.props.modalEditMode) {
-        this.setState({
-          recipeNameInput: this.props.recipes[this.props.modalRecipeIndex].name,
-          recipeIngredientsInput: this.props.recipes[this.props.modalRecipeIndex].ingredients,
-          recipeDirectionsInput: this.props.recipes[this.props.modalRecipeIndex].directions
-        });
-      } else {
-        this.setState({
-          recipeNameInput: '',
-          recipeIngredientsInput: '',
-          recipeDirectionsInput: ''
-        });
-      }
-    }
-  }, {
     key: "render",
     value: function render() {
 
@@ -18059,6 +18042,9 @@ var RecipeBox = function (_React$Component3) {
       this.setState({
         recipes: newRecipesState
       });
+
+      console.log("Recipe edited @ index: " + recipeIndex);
+      console.log(this.state.recipes);
     }
   }, {
     key: "deleteRecipe",
@@ -18069,6 +18055,9 @@ var RecipeBox = function (_React$Component3) {
       this.setState({
         recipes: newRecipesState
       });
+
+      console.log("Recipe deleted @ index " + index);
+      console.log(this.state.recipes);
     }
   }, {
     key: "addRecipe",
@@ -18081,6 +18070,9 @@ var RecipeBox = function (_React$Component3) {
       this.setState({
         recipes: newRecipesState
       });
+
+      console.log("New recipe added: ");
+      console.log(this.state.recipes);
     }
   }, {
     key: "render",
