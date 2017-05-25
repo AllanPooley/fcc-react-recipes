@@ -91,34 +91,21 @@ class RecipeEditorModal extends React.Component {
       recipeDirectionsInput: ''
     };
 
+    if (props.modalEditMode) {
+      // If the modal was opened following an 'Edit' request, prefill the form
+      // with the values of the recipe in focus.
+      this.setState({
+          recipeNameInput: props.newRecipe.name,
+          recipeIngredientsInput: props.newRecipe.ingredients,
+          recipeDirectionsInput: props.newRecipe.directions
+      });
+    }
+
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleIngredientsChange = this.handleIngredientsChange.bind(this);
     this.handleDirectionsChange = this.handleDirectionsChange.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
 
-    prefillModalForm(this.props);
-  }
-
-  prefillModalForm(props) {
-    if (props.modalEditMode) {
-
-      var recipeToEdit = props.recipes[props.modalRecipeIndex];
-
-      this.setState({
-          recipeNameInput: recipeToEdit.name,
-          recipeIngredientsInput: recipeToEdit.ingredients,
-          recipeDirectionsInput: recipeToEdit.directions
-      });
-
-    } else {
-
-      this.setState({
-          recipeNameInput: '',
-          recipeIngredientsInput: '',
-          recipeDirectionsInput: ''
-      });
-
-    }
   }
 
   handleNameChange(e) {
@@ -158,7 +145,22 @@ class RecipeEditorModal extends React.Component {
 
   componentWillReceiveProps(nextProps) {
 
-    prefillModalForm(nextProps);
+    if (nextProps.modalEditMode) {
+
+      this.setState({
+          recipeNameInput: nextProps.newRecipe.name,
+          recipeIngredientsInput: nextProps.newRecipe.ingredients,
+          recipeDirectionsInput: nextProps.newRecipe.directions
+      });
+
+    } else {
+
+      this.setState({
+          recipeNameInput: '',
+          recipeIngredientsInput: '',
+          recipeDirectionsInput: ''
+      });
+    }
 
   };
 
@@ -232,7 +234,7 @@ class RecipeBox extends React.Component {
     ];
     this.state = {
       recipes: starterRecipes,
-      modalRecipe: {},
+      newRecipe: {},
       modalEditMode: false,
       modalVisibility: false
     }
@@ -251,7 +253,7 @@ class RecipeBox extends React.Component {
 
   showModalAdd(){
     this.setState({
-      modalRecipeIndex: -1,
+      newRecipe: {},
       modalEditMode: false,
       modalVisibility: true
     });
@@ -259,10 +261,11 @@ class RecipeBox extends React.Component {
 
   showModalEdit(index){
     this.setState({
-      modalRecipeIndex: index,
+      newRecipe: this.state.recipes[index],
       modalEditMode: true,
       modalVisibility: true
     });
+
   }
 
   editRecipe(recipeIndex, updatedRecipe) {
@@ -330,8 +333,7 @@ class RecipeBox extends React.Component {
       <div className="recipe-box-container">
         <RecipeEditorModal
           visibility={this.state.modalVisibility}
-          recipes={this.state.recipes}
-          modalRecipeIndex = {this.state.modalRecipeIndex}
+          newRecipe={this.state.newRecipe}
           modalEditMode={this.state.modalEditMode}
           addRecipe={this.addRecipe}
           editRecipe={this.editRecipe}

@@ -17784,7 +17784,7 @@ var Recipe = function (_React$Component) {
           collapsible: true },
         _react2.default.createElement(
           _reactBootstrap.ListGroup,
-          null,
+          { key: this.props.recipe.name },
           _react2.default.createElement(
             _reactBootstrap.ListGroup,
             null,
@@ -17832,10 +17832,21 @@ var RecipeEditorModal = function (_React$Component2) {
       recipeDirectionsInput: ''
     };
 
+    if (props.modalEditMode) {
+      // If the modal was opened following an 'Edit' request, prefill the form
+      // with the values of the recipe in focus.
+      _this2.setState({
+        recipeNameInput: props.newRecipe.name,
+        recipeIngredientsInput: props.newRecipe.ingredients,
+        recipeDirectionsInput: props.newRecipe.directions
+      });
+    }
+
     _this2.handleNameChange = _this2.handleNameChange.bind(_this2);
     _this2.handleIngredientsChange = _this2.handleIngredientsChange.bind(_this2);
     _this2.handleDirectionsChange = _this2.handleDirectionsChange.bind(_this2);
     _this2.handleFormSubmit = _this2.handleFormSubmit.bind(_this2);
+
     return _this2;
   }
 
@@ -17882,14 +17893,12 @@ var RecipeEditorModal = function (_React$Component2) {
     key: "componentWillReceiveProps",
     value: function componentWillReceiveProps(nextProps) {
 
-      if (this.props.modalEditMode) {
-
-        var recipeToEdit = this.props.recipes[this.props.modalRecipeIndex];
+      if (nextProps.modalEditMode) {
 
         this.setState({
-          recipeNameInput: recipeToEdit.name,
-          recipeIngredientsInput: recipeToEdit.ingredients,
-          recipeDirectionsInput: recipeToEdit.directions
+          recipeNameInput: nextProps.newRecipe.name,
+          recipeIngredientsInput: nextProps.newRecipe.ingredients,
+          recipeDirectionsInput: nextProps.newRecipe.directions
         });
       } else {
 
@@ -17903,6 +17912,8 @@ var RecipeEditorModal = function (_React$Component2) {
   }, {
     key: "render",
     value: function render() {
+
+      console.log("Modal rerendered");
 
       return _react2.default.createElement(
         _reactBootstrap.Modal,
@@ -18009,7 +18020,7 @@ var RecipeBox = function (_React$Component3) {
     }];
     _this3.state = {
       recipes: starterRecipes,
-      modalRecipe: {},
+      newRecipe: {},
       modalEditMode: false,
       modalVisibility: false
     };
@@ -18032,7 +18043,7 @@ var RecipeBox = function (_React$Component3) {
     key: "showModalAdd",
     value: function showModalAdd() {
       this.setState({
-        modalRecipeIndex: -1,
+        newRecipe: {},
         modalEditMode: false,
         modalVisibility: true
       });
@@ -18041,7 +18052,7 @@ var RecipeBox = function (_React$Component3) {
     key: "showModalEdit",
     value: function showModalEdit(index) {
       this.setState({
-        modalRecipeIndex: index,
+        newRecipe: this.state.recipes[index],
         modalEditMode: true,
         modalVisibility: true
       });
@@ -18099,8 +18110,7 @@ var RecipeBox = function (_React$Component3) {
       var _this4 = this;
 
       var recipesArr = this.state.recipes;
-      console.log("Rerendered!");
-      console.log(recipesArr);
+      console.log("RecipeBox rerendered");
 
       var recipes = [];
       recipesArr.forEach(function (recipe, index) {
@@ -18117,8 +18127,7 @@ var RecipeBox = function (_React$Component3) {
         { className: "recipe-box-container" },
         _react2.default.createElement(RecipeEditorModal, {
           visibility: this.state.modalVisibility,
-          recipes: this.state.recipes,
-          modalRecipeIndex: this.state.modalRecipeIndex,
+          newRecipe: this.state.newRecipe,
           modalEditMode: this.state.modalEditMode,
           addRecipe: this.addRecipe,
           editRecipe: this.editRecipe,
@@ -18164,7 +18173,7 @@ var App = function (_React$Component4) {
           _react2.default.createElement(
             "h1",
             null,
-            "Recipe ox"
+            "Recipe Box"
           )
         ),
         _react2.default.createElement(RecipeBox, null)
