@@ -2,9 +2,9 @@
   "name": "fcc-react-recipes",
   "version": "1.0.0",
   "description": "An interface to add and store recipes. Built on React with the react-bootstrap library.",
-  "main": "index.js",
+  "main": "output/js/scripts.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "webpack-dev-server --hot"
   },
   "repository": {
     "type": "git",
@@ -24,7 +24,8 @@
     "react": "^15.5.4",
     "react-bootstrap": "^0.31.0",
     "react-dom": "^15.5.4",
-    "webpack": "^2.5.1"
+    "webpack": "^2.5.1",
+    "webpack-dev-server": "^2.4.5"
   },
   "babel": {
     "presets": [

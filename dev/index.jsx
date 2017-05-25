@@ -64,7 +64,7 @@ class Recipe extends React.Component {
       <Panel header={this.props.recipe.name}
         key={this.props.recipe.name}
         collapsible>
-        <ListGroup>
+        <ListGroup key={this.props.recipe.name}>
           <ListGroup>
             {ingredients}
           </ListGroup>
@@ -95,6 +95,30 @@ class RecipeEditorModal extends React.Component {
     this.handleIngredientsChange = this.handleIngredientsChange.bind(this);
     this.handleDirectionsChange = this.handleDirectionsChange.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
+
+    prefillModalForm(this.props);
+  }
+
+  prefillModalForm(props) {
+    if (props.modalEditMode) {
+
+      var recipeToEdit = props.recipes[props.modalRecipeIndex];
+
+      this.setState({
+          recipeNameInput: recipeToEdit.name,
+          recipeIngredientsInput: recipeToEdit.ingredients,
+          recipeDirectionsInput: recipeToEdit.directions
+      });
+
+    } else {
+
+      this.setState({
+          recipeNameInput: '',
+          recipeIngredientsInput: '',
+          recipeDirectionsInput: ''
+      });
+
+    }
   }
 
   handleNameChange(e) {
@@ -132,8 +156,15 @@ class RecipeEditorModal extends React.Component {
     this.props.hide();
   }
 
+  componentWillReceiveProps(nextProps) {
+
+    prefillModalForm(nextProps);
+
+  };
 
   render() {
+
+    console.log("Modal rerendered");
 
     return (
       <Modal
@@ -227,12 +258,9 @@ class RecipeBox extends React.Component {
   }
 
   showModalEdit(index){
-    console.log("edit mode triggered");
     this.setState({
       modalRecipeIndex: index,
-      modalEditMode: true
-    });
-    this.setState({
+      modalEditMode: true,
       modalVisibility: true
     });
   }
@@ -286,8 +314,7 @@ class RecipeBox extends React.Component {
 
   render() {
     var recipesArr = this.state.recipes;
-    console.log("Rerendered!");
-    console.log(recipesArr);
+    console.log("RecipeBox rerendered");
 
     var recipes = [];
     recipesArr.forEach((recipe, index) => {

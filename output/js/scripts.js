@@ -17879,6 +17879,28 @@ var RecipeEditorModal = function (_React$Component2) {
       this.props.hide();
     }
   }, {
+    key: "componentWillReceiveProps",
+    value: function componentWillReceiveProps(nextProps) {
+
+      if (this.props.modalEditMode) {
+
+        var recipeToEdit = this.props.recipes[this.props.modalRecipeIndex];
+
+        this.setState({
+          recipeNameInput: recipeToEdit.name,
+          recipeIngredientsInput: recipeToEdit.ingredients,
+          recipeDirectionsInput: recipeToEdit.directions
+        });
+      } else {
+
+        this.setState({
+          recipeNameInput: '',
+          recipeIngredientsInput: '',
+          recipeDirectionsInput: ''
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
 
@@ -18018,12 +18040,9 @@ var RecipeBox = function (_React$Component3) {
   }, {
     key: "showModalEdit",
     value: function showModalEdit(index) {
-      console.log("edit mode triggered");
       this.setState({
         modalRecipeIndex: index,
-        modalEditMode: true
-      });
-      this.setState({
+        modalEditMode: true,
         modalVisibility: true
       });
     }
@@ -18145,7 +18164,7 @@ var App = function (_React$Component4) {
           _react2.default.createElement(
             "h1",
             null,
-            "Recipe Box"
+            "Recipe ox"
           )
         ),
         _react2.default.createElement(RecipeBox, null)
