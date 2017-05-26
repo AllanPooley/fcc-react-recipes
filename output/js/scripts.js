@@ -17752,7 +17752,7 @@ var Recipe = function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      // Recipe = an object containing: name, ingredients (comma separated), directions.
+      // Recipe = an object containing: name, ingredients (comma separated), effect.
       var ingredients = [];
 
       // Giving the Ingredients list a heading.
@@ -17793,12 +17793,12 @@ var Recipe = function (_React$Component) {
           _react2.default.createElement(
             _reactBootstrap.ListGroupItem,
             { bsStyle: "info" },
-            "Instructions"
+            "Magical Effect"
           ),
           _react2.default.createElement(
             _reactBootstrap.ListGroupItem,
             null,
-            this.props.recipe.directions
+            this.props.recipe.effect
           )
         ),
         _react2.default.createElement(
@@ -17829,7 +17829,7 @@ var RecipeEditorModal = function (_React$Component2) {
     _this2.state = {
       recipeNameInput: '',
       recipeIngredientsInput: '',
-      recipeDirectionsInput: ''
+      recipeEffectInput: ''
     };
 
     if (props.modalEditMode) {
@@ -17838,13 +17838,13 @@ var RecipeEditorModal = function (_React$Component2) {
       _this2.setState({
         recipeNameInput: props.newRecipe.name,
         recipeIngredientsInput: props.newRecipe.ingredients,
-        recipeDirectionsInput: props.newRecipe.directions
+        recipeEffectInput: props.newRecipe.effect
       });
     }
 
     _this2.handleNameChange = _this2.handleNameChange.bind(_this2);
     _this2.handleIngredientsChange = _this2.handleIngredientsChange.bind(_this2);
-    _this2.handleDirectionsChange = _this2.handleDirectionsChange.bind(_this2);
+    _this2.handleEffectChange = _this2.handleEffectChange.bind(_this2);
     _this2.handleFormSubmit = _this2.handleFormSubmit.bind(_this2);
 
     return _this2;
@@ -17865,10 +17865,10 @@ var RecipeEditorModal = function (_React$Component2) {
       });
     }
   }, {
-    key: "handleDirectionsChange",
-    value: function handleDirectionsChange(e) {
+    key: "handleEffectChange",
+    value: function handleEffectChange(e) {
       this.setState({
-        recipeDirectionsInput: e.target.value
+        recipeEffectInput: e.target.value
       });
     }
   }, {
@@ -17878,11 +17878,11 @@ var RecipeEditorModal = function (_React$Component2) {
       var newRecipe = {
         name: this.state.recipeNameInput,
         ingredients: this.state.recipeIngredientsInput,
-        directions: this.state.recipeDirectionsInput
+        effect: this.state.recipeEffectInput
       };
 
       if (this.props.modalEditMode) {
-        this.props.editRecipe(this.props.modalRecipeIndex, newRecipe);
+        this.props.editRecipe(this.props.editIndex, newRecipe);
       } else {
         this.props.addRecipe(newRecipe);
       }
@@ -17898,14 +17898,14 @@ var RecipeEditorModal = function (_React$Component2) {
         this.setState({
           recipeNameInput: nextProps.newRecipe.name,
           recipeIngredientsInput: nextProps.newRecipe.ingredients,
-          recipeDirectionsInput: nextProps.newRecipe.directions
+          recipeEffectInput: nextProps.newRecipe.effect
         });
       } else {
 
         this.setState({
           recipeNameInput: '',
           recipeIngredientsInput: '',
-          recipeDirectionsInput: ''
+          recipeEffectInput: ''
         });
       }
     }
@@ -17968,13 +17968,13 @@ var RecipeEditorModal = function (_React$Component2) {
               _react2.default.createElement(
                 _reactBootstrap.ControlLabel,
                 null,
-                "Directions"
+                "Magical Effect"
               ),
               _react2.default.createElement(_reactBootstrap.FormControl, {
                 type: "text",
                 placeholder: "Here, write the steps required to cook this recipe.",
-                value: this.state.recipeDirectionsInput,
-                onChange: this.handleDirectionsChange,
+                value: this.state.recipeEffectInput,
+                onChange: this.handleEffectChange,
                 className: "modal-form-control"
               })
             )
@@ -18010,17 +18010,22 @@ var RecipeBox = function (_React$Component3) {
     var _this3 = _possibleConstructorReturn(this, (RecipeBox.__proto__ || Object.getPrototypeOf(RecipeBox)).call(this, props));
 
     var starterRecipes = [{
-      name: "The Ultimate Base",
-      ingredients: "Onion, garlic, mushrooms, oil",
-      directions: "In a large pan, heat oil over medium heat and cook onion for 1-2 minutes. Add the onions and garlic and then cook for 1 minute."
+      name: "Salted Eye",
+      ingredients: "Eye of the Cyclops, Salt",
+      effect: "Restores 67500 health and 45000 mana over 30 sec. Must remain seated while eating. If you spend at least 10 seconds eating you will become well fed and gain 60 mastery rating and 60 Stamina for 1 hour."
     }, {
-      name: "Coconut Curry Lentil Soup",
-      ingredients: "Coconut oil, onion, garlic, ginger, tomato paste, curry powder, red pepper flakes, vegetable broth, coconut milk, diced tomatos, lentils, salt, pepper",
-      directions: "In a stockpot, heat the coconut oil over medium heat and stir-fry the onion, garlic and ginger until the onion is translucent, a couple minutes. Add the tomato paste (or ketchup), curry powder, and red pepper flakes and cook for another minute. Add the vegetable broth, coconut milk, diced tomatoes and lentils. Cover and bring to a boil, then simmer on low heat for 20-30 minutes, until the lentils are very tender. Season with salt and pepper."
+      name: "Spicy Hot Talbuk",
+      ingredients: "Talbuk Venison, Hot Spices",
+      effect: "Restores 7500 health over 30 sec. Must remain seated while eating. If you spend at least 10 seconds eating you will become well fed and gain 20 Hit Rating and Spirit for 30 min."
+    }, {
+      name: "Crunchy Serpent",
+      ingredients: "Serpent Flesh, Sesame Oil",
+      effect: "Restores 7500 health over 30 sec. Must remain seated while eating. If you spend at least 10 seconds eating you will become well fed and gain 23 Spell Damage and 20 Spirit for 30 min."
     }];
     _this3.state = {
       recipes: starterRecipes,
       newRecipe: {},
+      editIndex: -1,
       modalEditMode: false,
       modalVisibility: false
     };
@@ -18044,6 +18049,7 @@ var RecipeBox = function (_React$Component3) {
     value: function showModalAdd() {
       this.setState({
         newRecipe: {},
+        editIndex: -1,
         modalEditMode: false,
         modalVisibility: true
       });
@@ -18053,6 +18059,7 @@ var RecipeBox = function (_React$Component3) {
     value: function showModalEdit(index) {
       this.setState({
         newRecipe: this.state.recipes[index],
+        editIndex: index,
         modalEditMode: true,
         modalVisibility: true
       });
@@ -18128,6 +18135,7 @@ var RecipeBox = function (_React$Component3) {
         _react2.default.createElement(RecipeEditorModal, {
           visibility: this.state.modalVisibility,
           newRecipe: this.state.newRecipe,
+          editIndex: this.state.editIndex,
           modalEditMode: this.state.modalEditMode,
           addRecipe: this.addRecipe,
           editRecipe: this.editRecipe,
@@ -18173,7 +18181,7 @@ var App = function (_React$Component4) {
           _react2.default.createElement(
             "h1",
             null,
-            "Recipe Box"
+            "Magical Recipe Box"
           )
         ),
         _react2.default.createElement(RecipeBox, null)

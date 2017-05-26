@@ -43,7 +43,7 @@ class Recipe extends React.Component {
   }
 
   render() {
-    // Recipe = an object containing: name, ingredients (comma separated), directions.
+    // Recipe = an object containing: name, ingredients (comma separated), effect.
     var ingredients = [];
 
     // Giving the Ingredients list a heading.
@@ -69,10 +69,10 @@ class Recipe extends React.Component {
             {ingredients}
           </ListGroup>
           <ListGroupItem bsStyle="info">
-            Instructions
+            Magical Effect
           </ListGroupItem>
           <ListGroupItem>
-            {this.props.recipe.directions}
+            {this.props.recipe.effect}
           </ListGroupItem>
         </ListGroup>
         <Button bsStyle="danger" className='button' onClick={this.handleDelete}>Delete</Button>
@@ -88,7 +88,7 @@ class RecipeEditorModal extends React.Component {
     this.state = {
       recipeNameInput: '',
       recipeIngredientsInput: '',
-      recipeDirectionsInput: ''
+      recipeEffectInput: ''
     };
 
     if (props.modalEditMode) {
@@ -97,13 +97,13 @@ class RecipeEditorModal extends React.Component {
       this.setState({
           recipeNameInput: props.newRecipe.name,
           recipeIngredientsInput: props.newRecipe.ingredients,
-          recipeDirectionsInput: props.newRecipe.directions
+          recipeEffectInput: props.newRecipe.effect
       });
     }
 
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleIngredientsChange = this.handleIngredientsChange.bind(this);
-    this.handleDirectionsChange = this.handleDirectionsChange.bind(this);
+    this.handleEffectChange = this.handleEffectChange.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
 
   }
@@ -120,9 +120,9 @@ class RecipeEditorModal extends React.Component {
     })
   }
 
-  handleDirectionsChange(e) {
+  handleEffectChange(e) {
     this.setState({
-      recipeDirectionsInput: e.target.value
+      recipeEffectInput: e.target.value
     })
   }
 
@@ -131,11 +131,11 @@ class RecipeEditorModal extends React.Component {
     var newRecipe = {
         name: this.state.recipeNameInput,
         ingredients: this.state.recipeIngredientsInput,
-        directions: this.state.recipeDirectionsInput
+        effect: this.state.recipeEffectInput
     };
 
     if (this.props.modalEditMode) {
-      this.props.editRecipe(this.props.modalRecipeIndex, newRecipe);
+      this.props.editRecipe(this.props.editIndex, newRecipe);
     } else {
       this.props.addRecipe(newRecipe);
     }
@@ -150,7 +150,7 @@ class RecipeEditorModal extends React.Component {
       this.setState({
           recipeNameInput: nextProps.newRecipe.name,
           recipeIngredientsInput: nextProps.newRecipe.ingredients,
-          recipeDirectionsInput: nextProps.newRecipe.directions
+          recipeEffectInput: nextProps.newRecipe.effect
       });
 
     } else {
@@ -158,7 +158,7 @@ class RecipeEditorModal extends React.Component {
       this.setState({
           recipeNameInput: '',
           recipeIngredientsInput: '',
-          recipeDirectionsInput: ''
+          recipeEffectInput: ''
       });
     }
 
@@ -197,12 +197,12 @@ class RecipeEditorModal extends React.Component {
                 onChange={this.handleIngredientsChange}
                 className="modal-form-control"
                 />
-              <ControlLabel>Directions</ControlLabel>
+              <ControlLabel>Magical Effect</ControlLabel>
               <FormControl
                 type="text"
                 placeholder="Here, write the steps required to cook this recipe."
-                value={this.state.recipeDirectionsInput}
-                onChange={this.handleDirectionsChange}
+                value={this.state.recipeEffectInput}
+                onChange={this.handleEffectChange}
                 className="modal-form-control"
                 />
             </FormGroup>
@@ -222,19 +222,25 @@ class RecipeBox extends React.Component {
     super(props);
     const starterRecipes = [
       {
-        name: "The Ultimate Base",
-        ingredients: "Onion, garlic, mushrooms, oil",
-        directions: "In a large pan, heat oil over medium heat and cook onion for 1-2 minutes. Add the onions and garlic and then cook for 1 minute."
+        name: "Salted Eye",
+        ingredients: "Eye of the Cyclops, Salt",
+        effect: "Restores 67500 health and 45000 mana over 30 sec. Must remain seated while eating. If you spend at least 10 seconds eating you will become well fed and gain 60 mastery rating and 60 Stamina for 1 hour."
       },
       {
-        name: "Coconut Curry Lentil Soup",
-        ingredients: "Coconut oil, onion, garlic, ginger, tomato paste, curry powder, red pepper flakes, vegetable broth, coconut milk, diced tomatos, lentils, salt, pepper",
-        directions: "In a stockpot, heat the coconut oil over medium heat and stir-fry the onion, garlic and ginger until the onion is translucent, a couple minutes. Add the tomato paste (or ketchup), curry powder, and red pepper flakes and cook for another minute. Add the vegetable broth, coconut milk, diced tomatoes and lentils. Cover and bring to a boil, then simmer on low heat for 20-30 minutes, until the lentils are very tender. Season with salt and pepper."
+        name: "Spicy Hot Talbuk",
+        ingredients: "Talbuk Venison, Hot Spices",
+        effect: "Restores 7500 health over 30 sec. Must remain seated while eating. If you spend at least 10 seconds eating you will become well fed and gain 20 Hit Rating and Spirit for 30 min."
+      },
+      {
+        name: "Crunchy Serpent",
+        ingredients: "Serpent Flesh, Sesame Oil",
+        effect: "Restores 7500 health over 30 sec. Must remain seated while eating. If you spend at least 10 seconds eating you will become well fed and gain 23 Spell Damage and 20 Spirit for 30 min."
       }
     ];
     this.state = {
       recipes: starterRecipes,
       newRecipe: {},
+      editIndex: -1,
       modalEditMode: false,
       modalVisibility: false
     }
@@ -254,6 +260,7 @@ class RecipeBox extends React.Component {
   showModalAdd(){
     this.setState({
       newRecipe: {},
+      editIndex: -1,
       modalEditMode: false,
       modalVisibility: true
     });
@@ -262,6 +269,7 @@ class RecipeBox extends React.Component {
   showModalEdit(index){
     this.setState({
       newRecipe: this.state.recipes[index],
+      editIndex: index,
       modalEditMode: true,
       modalVisibility: true
     });
@@ -334,6 +342,7 @@ class RecipeBox extends React.Component {
         <RecipeEditorModal
           visibility={this.state.modalVisibility}
           newRecipe={this.state.newRecipe}
+          editIndex={this.state.editIndex}
           modalEditMode={this.state.modalEditMode}
           addRecipe={this.addRecipe}
           editRecipe={this.editRecipe}
@@ -361,7 +370,7 @@ class App extends React.Component {
     return (
       <div>
         <div className='header'>
-          <h1>Recipe Box</h1>
+          <h1>Magical Recipe Box</h1>
         </div>
         <RecipeBox />
       </div>
