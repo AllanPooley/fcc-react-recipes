@@ -17893,6 +17893,8 @@ var RecipeEditorModal = function (_React$Component2) {
     key: "componentWillReceiveProps",
     value: function componentWillReceiveProps(nextProps) {
 
+      // Check whether the Modal should be pre-populated with values, in the case a recipe is being edited.
+
       if (nextProps.modalEditMode) {
 
         this.setState({
@@ -18009,21 +18011,33 @@ var RecipeBox = function (_React$Component3) {
 
     var _this3 = _possibleConstructorReturn(this, (RecipeBox.__proto__ || Object.getPrototypeOf(RecipeBox)).call(this, props));
 
-    var starterRecipes = [{
-      name: "Salted Eye",
-      ingredients: "Eye of the Cyclops, Salt",
-      effect: "Restores 67500 health and 45000 mana over 30 sec. Must remain seated while eating. If you spend at least 10 seconds eating you will become well fed and gain 60 mastery rating and 60 Stamina for 1 hour."
-    }, {
-      name: "Spicy Hot Talbuk",
-      ingredients: "Talbuk Venison, Hot Spices",
-      effect: "Restores 7500 health over 30 sec. Must remain seated while eating. If you spend at least 10 seconds eating you will become well fed and gain 20 Hit Rating and Spirit for 30 min."
-    }, {
-      name: "Crunchy Serpent",
-      ingredients: "Serpent Flesh, Sesame Oil",
-      effect: "Restores 7500 health over 30 sec. Must remain seated while eating. If you spend at least 10 seconds eating you will become well fed and gain 23 Spell Damage and 20 Spirit for 30 min."
-    }];
+    var initialRecipes;
+
+    if (localStorage.recipes) {
+
+      initialRecipes = JSON.parse(localStorage.getItem("recipes") || "[]");
+    } else {
+      initialRecipes = [{
+        name: "Spicy Hot Talbuk",
+        ingredients: "Talbuk Venison, Hot Spices",
+        effect: "Consumer gains unlimited stamina for."
+      }, {
+        name: "Crunchy Serpent",
+        ingredients: "Serpent Flesh, Sesame Oil",
+        effect: "Consumer gains the ability to using writh upon the ground like a snake."
+      }, {
+        name: "Salted Magical Eye",
+        ingredients: "Eye of the Cyclops, Salt",
+        effect: "Consumer gains irritable bowel syndrome for 24 hours."
+      }];
+
+      localStorage.setItem("recipes", JSON.stringify(initialRecipes));
+    }
+
+    console.log(initialRecipes);
+
     _this3.state = {
-      recipes: starterRecipes,
+      recipes: initialRecipes,
       newRecipe: {},
       editIndex: -1,
       modalEditMode: false,
@@ -18079,6 +18093,7 @@ var RecipeBox = function (_React$Component3) {
       this.setState({
         recipes: newRecipesState
       });
+      localStorage.setItem("recipes", JSON.stringify(newRecipesState));
 
       console.log("Recipe edited @ index: " + recipeIndex);
       console.log(this.state.recipes);
@@ -18092,6 +18107,7 @@ var RecipeBox = function (_React$Component3) {
       this.setState({
         recipes: newRecipesState
       });
+      localStorage.setItem("recipes", JSON.stringify(newRecipesState));
 
       console.log("Recipe deleted @ index " + index);
       console.log(this.state.recipes);
@@ -18107,6 +18123,7 @@ var RecipeBox = function (_React$Component3) {
       this.setState({
         recipes: newRecipesState
       });
+      localStorage.setItem("recipes", JSON.stringify(newRecipesState));
 
       console.log("New recipe added: ");
       console.log(this.state.recipes);
